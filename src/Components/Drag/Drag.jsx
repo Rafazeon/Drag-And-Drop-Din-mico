@@ -49,7 +49,7 @@ export function DropBox ({ dropped, Component, Children }) {
       className="box"
       ref={dropRef}
     >
-      {isActive ? 'Release to Drop' : <Component activateChildren={activateChildren} />}
+      {isActive ? <Component /> : <Component activateChildren={activateChildren} />}
     </div>
   )
 }
