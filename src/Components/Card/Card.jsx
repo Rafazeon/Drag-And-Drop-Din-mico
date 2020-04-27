@@ -1,20 +1,21 @@
 import React from 'react';
 import CardBlock from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardActions from '@material-ui/core/CardActions';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
-
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import CardMedia from './CardMedia'
 
+const Childrens = childs => {
+  if(childs) {
+    return childs.map((Component, index) => {
+      return <Component key={index} />
+    })
+  }
+}
 
 function Card(props) {
-  const { classes, activateChildren } = props
-  const Children = activateChildren
-
+  const { classes, childrens } = props
+  
   return (
     <CardBlock className={classes.root}>
       <CardHeader
@@ -32,7 +33,7 @@ function Card(props) {
         subheader="Chatbot InOne"
       />
 
-      {activateChildren && <Children />}
+      {Childrens(childrens)}
       
       {/* <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
