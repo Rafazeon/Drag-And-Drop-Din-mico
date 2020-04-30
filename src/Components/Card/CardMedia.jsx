@@ -9,12 +9,15 @@ const img =
 const styles = {
   media: {
     height: 0,
+    width: '100%',
     paddingTop: "56.25%", // 16:9
+    backgroundSize: "cover"
   },
 }
 
 function CardMedia(props) {
   const { classes } = props
+
   return (
     <CardImage
       className={classes.media}

@@ -29,7 +29,7 @@ function Sidebar(props) {
     handleDrawerOpen,
     handleDrawerClose,
   } = props;
-  const [dropped, setDropped] = React.useState(false)
+  
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -52,7 +52,7 @@ function Sidebar(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Chatbot Creator
+            Drag Creator
           </Typography>
         </Toolbar>
       </AppBar>
@@ -84,9 +84,9 @@ function Sidebar(props) {
             <ListItem button key={text}>
               <ListItemIcon>
                 {index % 2 === 0 ? (
-                  <DraggableBox Icon={InboxIcon} Children={CardMedia} setDropped={setDropped}></DraggableBox>
+                  <DraggableBox Icon={InboxIcon} Children={CardMedia}></DraggableBox>
                 ) : (
-                  <DraggableBox Icon={MailIcon} Children={CardMessage} setDropped={setDropped}></DraggableBox>
+                  <DraggableBox Icon={MailIcon} Children={CardMessage}></DraggableBox>
                 )}
               </ListItemIcon>
               <ListItemText primary={text} />

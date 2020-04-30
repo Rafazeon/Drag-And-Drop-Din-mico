@@ -1,5 +1,8 @@
-import React, { useContext } from "react";
+import React, { useCallback, useRef, useContext } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import update from "immutability-helper";
+// Estilo Component
+import { makeStyles } from "@material-ui/core/styles";
 
 // Drag Context
 import DragContext from "../../Contexts/DragContext";
@@ -7,54 +10,102 @@ import DragContext from "../../Contexts/DragContext";
 const itemTypes = {
   BOX: "box",
 };
-const arr = [];
-export function DraggableBox({ Icon, Children, dropped, setDropped }) {
+
+const useStyles = makeStyles((theme) => ({
+  box: {
+    display: 'flex',
+    cursor: 'pointer'
+  },
+
+  root: {
+    maxWidth: 220,
+    marginRight: 20
+  },
+  
+  avatar: {
+    backgroundColor: '#f44336'
+  }
+}));
+
+export function DraggableBox({ id, Icon, Children}) {
+  const classes = useStyles()
+  const ref = useRef(null);
+  const [{ isDragging }, drag] = useDrag({
+    item: { type: itemTypes.BOX, Children, child: !Icon, id },
+    collect: monitor => ({
+      isDragging: monitor.isDragging()
+    })
+  });
+  drag(ref);
+
+  return (
+    <div className={classes.box} ref={ref}>
+       {Icon ? <Icon /> : <Children />}
+    </div>
+  )
+}
+
+export function DropBox() {
+  const classes = useStyles()
   const [drag, setDrag] = useContext(DragContext);
-  const [collectedProps, dragSourceRef] = useDrag({
-    item: { type: itemTypes.BOX },
-    end: (item, monitor) => {
-      const dropResult = monitor.getDropResult();
-      if (item && dropResult) {
-        setDropped(true);
-        // Lógica para concatenar múltiplos componentes
-        let pos = arr
-          .map(item => {
-            return item.displayName;
-          })
-          .indexOf(Children.displayName);
-        
-        // Verifica se já existe o componente dentro do array
-        if(pos === -1) {
-          arr.push(Children)
-        }
+  
+  const dragCards = drag.cards
+
+  const changeTaskId = useCallback(
+      // Esse id pertence a task quando arrasta um children
+      (id, children) => {
+        let task = dragCards.find(task => task.id === id);
+        const taskIndex = dragCards.indexOf(task);
+        let tasks = task.content.concat(children)
+        task = { ...task, content: tasks };
+        let newTasks = update(dragCards, {
+          [taskIndex]: { $set: task }
+        });
+        setDrag({cards: newTasks, key: drag.key});
+      },
+      [dragCards]
+  );
+
+  const removeTaskId = (id, children) => {
+    let dragCards = drag.cards.find(item => item.id === id)
+
+    if(dragCards.content.indexOf(children) !== -1) {
+      dragCards.content.splice(children, 1)
+    }
+
+    let tasks = drag.cards.map(item => {
+      if(item.id === dragCards.id) {
+        item = dragCards
       }
+      return item
+    }) 
 
-      setDrag({arr, dropped: true})
-    },
-  });
+    setDrag({cards: tasks, key: drag.key})
+  }
+  
+  
 
-  return (
-    <div className="box" ref={dragSourceRef}>
-      {dropped ? "Me Dropa" : <Icon />}
-    </div>
-  );
-}
-
-export function DropBox({ dropped, Component, Children }) {
-  const [{ canDrop, isOver }, dropRef] = useDrop({
+  const ref = useRef(null);
+  const [, drop] = useDrop({
     accept: itemTypes.BOX,
-    collect: (monitor) => ({
-      canDrop: monitor.canDrop(),
-      isOver: monitor.isOver(),
-    }),
+    drop(item) {
+      if(item.child) {
+        removeTaskId(item.id, item.Children)
+      }
+      changeTaskId(drag.key, item.Children)
+    }
   });
+  drop(ref);
 
-  const isActive = canDrop && isOver;
-  let childrens = dropped && Children;
+  const Components = () => {
+    return dragCards.map((item, index) => {
+      return (
+      <div onDragLeaveCapture={() => setDrag({cards: drag.cards, key: item.id})}>
+        <item.component classes={classes} id={item.id} childrens={item.content} /> 
+      </div>
+      ) 
+    })
+  }
 
-  return (
-    <div className="box" ref={dropRef}>
-      {isActive ? <Component childrens={childrens} /> : <Component childrens={childrens} />}
-    </div>
-  );
-}
+  return <div className={classes.box} ref={ref}> {Components()}</div>;
+};

@@ -5,17 +5,20 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-const Childrens = childs => {
+// Drag Component
+import { DraggableBox } from '../Drag/Drag';
+
+const Childrens = (id, childs) => {
+  // Passo o id para remover o child do componente certo
   if(childs) {
     return childs.map((Component, index) => {
-      return <Component key={index} />
+      return <DraggableBox id={id} Icon={false} Children={Component} key={index} />
     })
   }
 }
 
 function Card(props) {
-  const { classes, childrens } = props
-  
+  const { classes, id, childrens, addCard } = props
   return (
     <CardBlock className={classes.root}>
       <CardHeader
@@ -25,7 +28,7 @@ function Card(props) {
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings">
+          <IconButton onClick={() => addCard()} aria-label="settings">
             <MoreVertIcon />
           </IconButton>
         }
@@ -33,7 +36,7 @@ function Card(props) {
         subheader="Chatbot InOne"
       />
 
-      {Childrens(childrens)}
+      {Childrens(id, childrens)}
       
       {/* <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">

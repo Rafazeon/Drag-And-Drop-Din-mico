@@ -16,6 +16,8 @@ import Header from './Header';
 // Footer Component
 import Footer from './Footer';
 
+import Card from '../Card/CardContainer';
+
 const useStyles = makeStyles((theme) => ({
         root: {
             height: "100vh",
@@ -27,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 
 function GuestLayout(props) {
     const classes = useStyles();
-    const [drag, setDrag] = useState("")
+    const [drag, setDrag] = useState({cards: [{id: 1, component: Card, content: []}], key: 1})
     return (
         <Grid container className={classes.root}>
             <DndProvider backend={HTML5Backend}>
