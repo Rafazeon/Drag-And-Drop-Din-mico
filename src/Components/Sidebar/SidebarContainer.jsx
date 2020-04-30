@@ -80,7 +80,7 @@ function SidebarContainer() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
+  
   return <Sidebar 
             classes={classes} 
             theme={theme}

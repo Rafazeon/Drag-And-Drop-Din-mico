@@ -3,9 +3,6 @@ import CardImage from "@material-ui/core/CardMedia";
 // Estilo Component
 import { withStyles } from "@material-ui/styles";
 
-const img =
-  "https://natgeo.imgix.net/factsheets/thumbnails/01-balance-of-nature.adapt.jpg?auto=compress,format&w=1600&h=900&fit=crop";
-
 const styles = {
   media: {
     height: 0,
@@ -16,7 +13,7 @@ const styles = {
 }
 
 function CardMedia(props) {
-  const { classes } = props
+  const { classes, img } = props
 
   return (
     <CardImage

@@ -33,7 +33,7 @@ function CardContainer(props) {
     
     setDrag({cards: dragId, key: drag.key})
   }
-  
+
   return (
   <div key={props.id}>
     <Card {...props} classes={classes} addCard={addCard} />

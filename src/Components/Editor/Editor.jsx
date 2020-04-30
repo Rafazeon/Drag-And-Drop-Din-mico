@@ -7,7 +7,7 @@ import { DropBox } from '../Drag/Drag';
 
 function Editor(props) {
     const { classes } = props
-
+    
     return (
         <Grid className={classes.root} spacing={2}>
             <div>Component Default</div>

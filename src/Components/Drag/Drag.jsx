@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export function DraggableBox({ id, Icon, Children}) {
+export function DraggableBox({ id, Icon, Children }) {
   const classes = useStyles()
   const ref = useRef(null);
   const [{ isDragging }, drag] = useDrag({
@@ -40,7 +40,7 @@ export function DraggableBox({ id, Icon, Children}) {
 
   return (
     <div className={classes.box} ref={ref}>
-       {Icon ? <Icon /> : <Children />}
+       {Icon ? <Icon /> : Children}
     </div>
   )
 }

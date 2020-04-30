@@ -80,14 +80,15 @@ function Sidebar(props) {
         </div>
         <Divider />
         <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+          {["Inbox"].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>
-                {index % 2 === 0 ? (
-                  <DraggableBox Icon={InboxIcon} Children={CardMedia}></DraggableBox>
-                ) : (
-                  <DraggableBox Icon={MailIcon} Children={CardMessage}></DraggableBox>
-                )}
+                <div key={index}>
+                  <DraggableBox Icon={InboxIcon} Children={<CardMedia img={"https://natgeo.imgix.net/factsheets/thumbnails/01-balance-of-nature.adapt.jpg?auto=compress,format&w=1600&h=900&fit=crop"} />}></DraggableBox>
+                  <DraggableBox Icon={MailIcon} Children={<CardMessage text={"Ola Rafael esse é um componente de texto"} />}></DraggableBox>
+                  <DraggableBox Icon={InboxIcon} Children={<CardMedia img={"https://media-cdn.tripadvisor.com/media/photo-s/0e/cf/d8/38/por-do-sol.jpg"} />}></DraggableBox>
+                  <DraggableBox Icon={MailIcon} Children={<CardMessage text={"Ola Dionatan esse é um componente de texto"} />}></DraggableBox>
+                </div>
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
