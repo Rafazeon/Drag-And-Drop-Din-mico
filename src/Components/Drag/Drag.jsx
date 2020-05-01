@@ -53,7 +53,7 @@ export function DropBox() {
 
   const changeTaskId = useCallback(
       // Esse id pertence a task quando arrasta um children
-      (id, children) => {
+      (id, children, child) => {
         let task = dragCards.find(task => task.id === id);
         const taskIndex = dragCards.indexOf(task);
         let tasks = task.content.concat(children)
@@ -61,17 +61,21 @@ export function DropBox() {
         let newTasks = update(dragCards, {
           [taskIndex]: { $set: task }
         });
-        setDrag({cards: newTasks, key: drag.key});
+
+        if(!child) {
+          setDrag({cards: newTasks, key: drag.key});
+        }
+
       },
       [dragCards]
   );
 
   const removeTaskId = (id, children) => {
     let dragCards = drag.cards.find(item => item.id === id)
-
-    if(dragCards.content.indexOf(children) !== -1) {
-      dragCards.content.splice(children, 1)
-    }
+    
+      if(dragCards.content.indexOf(children) !== -1) {
+        dragCards.content.splice(children, 1)
+      }  
 
     let tasks = drag.cards.map(item => {
       if(item.id === dragCards.id) {
@@ -81,20 +85,31 @@ export function DropBox() {
     }) 
 
     setDrag({cards: tasks, key: drag.key})
+    
   }
-  
-  
 
   const ref = useRef(null);
   const [, drop] = useDrop({
     accept: itemTypes.BOX,
     drop(item) {
-      if(item.child) {
-        removeTaskId(item.id, item.Children)
+    // Com esse código fixei a duplicação que fazia ao 
+    // passar um children a outra task
+
+      if(item.id !== drag.key) {
+        item.child = false
+        if(item.id) {
+          removeTaskId(item.id, item.Children)
+        }
       }
-      changeTaskId(drag.key, item.Children)
+
+      changeTaskId(drag.key, item.Children, item.child)     
+
+      if(item.child && item.id !== drag.key) {
+          removeTaskId(item.id, item.Children)
+      }
     }
   });
+
   drop(ref);
 
   const Components = () => {
